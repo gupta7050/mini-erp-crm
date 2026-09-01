@@ -27,7 +27,7 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
-app.get(['/api/health/docx', '/api/docs'], (req: Request, res: Response) => {
+app.get(['/', '/api/health/docx', '/api/docs'], (req: Request, res: Response) => {
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
