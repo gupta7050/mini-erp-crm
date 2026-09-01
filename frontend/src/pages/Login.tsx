@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Package, ShieldCheck, ArrowRight, Lock, Mail } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../types';
 
 export const Login: React.FC = () => {
-  const { login } = useAuth();
+  const navigate = useNavigate();
+  const { login, token } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // If already authenticated, redirect automatically to Dashboard
+  useEffect(() => {
+    if (token) {
+      navigate('/', { replace: true });
+    }
+  }, [token, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +26,7 @@ export const Login: React.FC = () => {
 
     try {
       await login(email, password);
+      navigate('/', { replace: true });
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check credentials.');
     } finally {
@@ -36,6 +46,7 @@ export const Login: React.FC = () => {
 
     try {
       await login(emailMap[role], 'Password@123');
+      navigate('/', { replace: true });
     } catch (err: any) {
       setError(err.message || 'Demo login failed');
     } finally {
