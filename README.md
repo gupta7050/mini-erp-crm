@@ -1,83 +1,161 @@
-# Mini ERP + CRM Operations Portal
+# 🏭 Mini ERP + CRM Operations Portal
 
-A distribution and wholesale Operations Portal featuring Role-Based Access Control (RBAC), Customer Relationship Management (CRM), Inventory Management with low stock alerts, Sales Challan workflow with atomic database stock deduction, PDF Invoice generation, and real-time operational dashboard analytics.
+> Full-stack B2B wholesale operations management system built for a **Full Stack Developer Case Study** submission.
+
+[![Live Frontend](https://img.shields.io/badge/Live%20Frontend-Vercel-black?logo=vercel)](https://mini-erp-crm.vercel.app)
+[![Live API](https://img.shields.io/badge/Live%20API-Render-46E3B7?logo=render)](https://mini-erp-crm-api.onrender.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/gupta7050/mini-erp-crm)
 
 ---
 
-## 🔑 Demo Test Login Credentials
+## 📋 Submission Details
 
-| Role | Email | Password | Allowed Capabilities |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@minierp.com` | `Password@123` | Full access across all CRM, Products, Challans & Admin settings |
-| **Sales** | `sales@minierp.com` | `Password@123` | Customer management, Add Follow-ups, Create & Confirm Sales Challans |
+| # | Requirement | Details |
+|---|-------------|---------|
+| 1 | **GitHub Repository** | https://github.com/gupta7050/mini-erp-crm |
+| 2 | **Live Frontend URL** | https://mini-erp-crm.vercel.app |
+| 3 | **Live Backend API URL** | https://mini-erp-crm-api.onrender.com |
+| 4 | **Test Login Credentials** | See table below |
+| 5 | **Postman Collection** | `Postman_Collection.json` in repository root |
+| 6 | **README & Setup Instructions** | This file |
+| 7 | **Architecture Explanation** | See Architecture section below |
+| 8 | **Known Limitations** | See Known Limitations section below |
+
+---
+
+## 🔑 Test Login Credentials
+
+| Role | Email | Password | Access Scope |
+|:-----|:------|:---------|:-------------|
+| **Admin** | `admin@minierp.com` | `Password@123` | Full access — CRM, Products, Challans, Admin settings |
+| **Sales** | `sales@minierp.com` | `Password@123` | Customer management, Follow-ups, Create & Confirm Sales Challans |
 | **Warehouse** | `warehouse@minierp.com` | `Password@123` | Product catalog, Stock Adjustments (IN/OUT), Audit Movement Logs |
 | **Accounts** | `accounts@minierp.com` | `Password@123` | Revenue dashboard, Customer view, Challan/Invoice PDF download |
 
-> **Note**: The UI features a **"1-Click Demo Quick Switch"** widget on the login page and left sidebar so evaluators can instantly test role permissions without typing.
+> 💡 The UI features a **"1-Click Demo Quick Switch"** widget on the login page and sidebar — evaluators can instantly test all 4 roles without typing credentials.
 
 ---
 
-## 🛠️ Required Tech Stack
+## 🚀 Live Demo
 
-### Backend
-- **Node.js & TypeScript**: Type-safe REST API server architecture.
-- **Express.js**: Modular route controllers and custom middleware.
-- **Prisma ORM**: Cross-database ORM supporting zero-config SQLite locally and PostgreSQL in cloud production.
-- **JWT & Bcrypt**: Token-based authentication and hashed passwords.
-- **Zod & Express Validator**: Request payload validation.
-
-### Frontend
-- **React 18 & TypeScript**: Single-Page Application (SPA) built with Vite.
-- **Tailwind CSS & Lucide Icons**: Ultra-sleek glassmorphic dark interface.
-- **jspdf & jspdf-autotable**: Client-side B2B Tax Invoice PDF generation.
-- **React Router v6**: Client-side navigation & route authentication guards.
+- **Frontend**: https://mini-erp-crm.vercel.app
+- **Backend API**: https://mini-erp-crm-api.onrender.com
+- **API Health Check**: https://mini-erp-crm-api.onrender.com/api/health
+- **API Documentation**: https://mini-erp-crm-api.onrender.com/api/docs
 
 ---
 
-## 🏗️ Core Modules & Requirements Implemented
+## 🏗️ Architecture
 
-### 1. Authentication & Role-Based Access Control (RBAC)
-- Role definitions for `ADMIN`, `SALES`, `WAREHOUSE`, `ACCOUNTS`.
-- Endpoint security using JWT authentication middleware (`/api/auth/me`, `/api/auth/login`).
-- Client-side role-gated UI elements and navigation tabs.
+### System Architecture Overview
 
-### 2. Customer CRM Module
-- Complete Customer profiles (`Customer Name`, `Mobile`, `Email`, `Business Name`, `GST Number`, `Type`: `RETAIL` / `WHOLESALE` / `DISTRIBUTOR`, `Address`, `Status`: `LEAD` / `ACTIVE` / `INACTIVE`, `Follow-Up Date`, `Notes`).
-- Interactive Follow-Up timeline notes log.
-- Customer search by name, business, mobile, or email.
+```
+┌──────────────────────────────────────────────────────────┐
+│                     CLIENT BROWSER                        │
+│          React 18 + Vite SPA (Vercel CDN)                │
+│  ┌──────────────┐  ┌────────────┐  ┌──────────────────┐  │
+│  │  Auth Guard  │  │  Role RBAC │  │  PDF Generator   │  │
+│  │  (JWT token) │  │  (4 roles) │  │  (jsPDF client)  │  │
+│  └──────────────┘  └────────────┘  └──────────────────┘  │
+└──────────────────────────┬───────────────────────────────┘
+                           │ HTTPS REST API calls
+                           ▼
+┌──────────────────────────────────────────────────────────┐
+│                   BACKEND API SERVER                      │
+│       Node.js + TypeScript + Express.js (Render)         │
+│  ┌──────────────┐  ┌────────────┐  ┌──────────────────┐  │
+│  │  JWT Auth    │  │  Zod       │  │  Route           │  │
+│  │  Middleware  │  │  Validate  │  │  Controllers     │  │
+│  └──────────────┘  └────────────┘  └──────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐ │
+│  │               Prisma ORM Layer                       │ │
+│  └──────────────────────────────────────────────────────┘ │
+└──────────────────────────┬───────────────────────────────┘
+                           │ SQL Queries
+                           ▼
+┌──────────────────────────────────────────────────────────┐
+│             PostgreSQL Database (Render / Neon)           │
+│   Users │ Customers │ Products │ StockMovements │ Challans│
+└──────────────────────────────────────────────────────────┘
+```
 
-### 3. Product & Inventory Module
-- Product fields (`Name`, `SKU`, `Category`, `Unit Price`, `Current Stock`, `Minimum Stock Alert Quantity`, `Location/Warehouse`).
-- Low stock warning banners and status badges (`Low Stock` vs `In Stock`).
-- Quick Stock Adjustment modal (Restock `IN` / Dispatched `OUT`).
-- Stock Movement Audit Log tracking product, quantity changed, movement type, reason, created by user, and timestamp.
+### Technology Stack
 
-### 4. Sales Challan & Invoicing Flow
-- Select customer and add multiple product lines with live stock availability indicators.
-- Auto-generated unique Challan Numbers (`CH-YYYYMMDD-XXXX`).
-- Save as `DRAFT` or `CONFIRMED`.
-- **Atomic Transaction Logic**:
-  - Confirming a challan executes a database transaction reducing product stock and creating an `OUT` stock movement.
-  - Stock validation prevents stock from going negative.
-  - If stock is insufficient, API returns an explicit `400 Bad Request` specifying available vs requested units.
-  - Snapshot storage: Challan items retain product name, SKU, and unit price at time of order creation.
-  - Printable & downloadable B2B Tax Invoice PDF.
+| Layer | Technology |
+|:------|:-----------|
+| **Frontend Framework** | React 18 + TypeScript + Vite |
+| **UI Styling** | Tailwind CSS + Lucide Icons |
+| **PDF Generation** | jsPDF + jsPDF-AutoTable (client-side) |
+| **Client Routing** | React Router v6 with protected routes |
+| **Backend Framework** | Node.js + TypeScript + Express.js |
+| **Authentication** | JWT (jsonwebtoken) + bcryptjs |
+| **Validation** | Zod schema validation |
+| **ORM** | Prisma ORM |
+| **Database (Local)** | SQLite (zero-config dev) |
+| **Database (Production)** | PostgreSQL (Render / Neon) |
+| **Frontend Hosting** | Vercel (CDN global edge) |
+| **Backend Hosting** | Render (Node.js Web Service) |
+| **Containerization** | Docker + Docker Compose |
+
+### Key Design Decisions
+
+1. **Prisma ORM with dual DB support** — SQLite for zero-config local dev, PostgreSQL for production. Only a single env var change needed.
+2. **Atomic stock transactions** — Confirming a Sales Challan uses a Prisma `$transaction()` block to atomically deduct stock AND create audit log entries, preventing partial writes.
+3. **Snapshot pricing** — Challan items store `productName`, `productSku`, and `unitPrice` at order time so invoice accuracy is preserved even if catalog prices change later.
+4. **Client-side PDF** — Tax Invoice PDF generation happens entirely in the browser using jsPDF (no server-side rendering needed, reducing backend complexity).
+5. **Role-based middleware** — Each API route specifies an array of allowed roles. The `requireRole(roles[])` middleware rejects unauthorized requests with `403 Forbidden`.
+
+### Folder Structure
+
+```
+mini-erp-crm/
+├── backend/                    # Node.js + Express API
+│   ├── prisma/
+│   │   ├── schema.prisma       # Database schema (all 6 models)
+│   │   └── seed.ts             # Demo users + sample data seeder
+│   ├── src/
+│   │   ├── app.ts              # Express app setup, middleware
+│   │   ├── routes/             # auth, customers, products, challans, dashboard
+│   │   ├── middleware/         # JWT auth, role RBAC, error handler
+│   │   └── lib/                # Prisma client singleton
+│   ├── .env                    # PORT, DATABASE_URL, JWT_SECRET
+│   └── package.json
+├── frontend/                   # React 18 + Vite SPA
+│   ├── src/
+│   │   ├── context/            # AuthContext (JWT state management)
+│   │   ├── pages/              # Login, Dashboard, Customers, Products, Challans
+│   │   ├── components/         # InvoicePDFModal, StockAdjustModal, etc.
+│   │   ├── services/           # api.ts (Axios with interceptors)
+│   │   └── types/              # TypeScript type definitions
+│   ├── .env                    # VITE_API_URL
+│   └── package.json
+├── docker-compose.yml          # Full stack Docker deployment
+├── Postman_Collection.json     # All API endpoints with auth
+└── README.md
+```
 
 ---
 
-## 🚀 How to Run Locally
+## 🔧 Local Setup Instructions
 
 ### Prerequisites
-- Node.js (v18 or v20+)
-- npm or yarn
+- **Node.js** v18 or v20+
+- **npm** v8+
+- **Git**
 
-### 1. Clone & Setup Backend
+### Step 1 — Clone Repository
+```bash
+git clone https://github.com/gupta7050/mini-erp-crm.git
+cd mini-erp-crm
+```
+
+### Step 2 — Backend Setup
 ```bash
 cd backend
 npm install
 ```
 
-Configure environment variables in `backend/.env`:
+Create `backend/.env`:
 ```env
 PORT=5000
 DATABASE_URL="file:./dev.db"
@@ -85,81 +163,162 @@ JWT_SECRET="mini_erp_crm_super_secret_jwt_key_2026"
 NODE_ENV="development"
 ```
 
-Initialize & Seed Database:
+Initialize database & seed demo data:
 ```bash
 npx prisma generate
 npx prisma db push
 npm run seed
 ```
 
-Start Backend API Server:
+Start backend API server:
 ```bash
 npm run dev
-# Server running at http://localhost:5000
+# ✅ API running at http://localhost:5000
 ```
 
-### 2. Setup & Start Frontend
-Open a new terminal window:
+### Step 3 — Frontend Setup
+Open a **new terminal**:
 ```bash
 cd frontend
-npm install --ignore-scripts
+npm install
+```
+
+Create `frontend/.env`:
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+Start frontend dev server:
+```bash
 npm run dev
-# App running at http://localhost:3000
+# ✅ UI running at http://localhost:3000
 ```
 
 ---
 
 ## 🐳 Docker Deployment
 
-To spin up the full stack (Backend + Frontend) via Docker Compose:
-
+Run the full stack with a single command:
 ```bash
 docker-compose up --build
 ```
-- Frontend UI will be accessible at: `http://localhost:3000`
-- Backend REST API will be accessible at: `http://localhost:5000`
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:5000
 
 ---
 
-## 🌐 Free Cloud Deployment Instructions
+## ☁️ Cloud Deployment Instructions
 
-### Option 1: Backend & Database Deployment (Render / Neon / Supabase)
-1. **Database**: Create a free PostgreSQL database instance on [Neon.tech](https://neon.tech) or [Supabase](https://supabase.com) and copy the `DATABASE_URL`.
-2. **Backend**:
-   - Create a Web Service on [Render](https://render.com) connected to the `backend/` folder.
-   - Set Build Command: `npm install && npx prisma generate && npx prisma db push && npm run build`
-   - Set Start Command: `npm start`
-   - In `backend/prisma/schema.prisma`, update provider to `postgresql`:
-     ```prisma
-     datasource db {
-       provider = "postgresql"
-       url      = env("DATABASE_URL")
-     }
-     ```
-   - Add Environment Variables: `DATABASE_URL`, `JWT_SECRET`, `PORT=5000`.
+### Backend — Render.com (Free Tier)
 
-### Option 2: Frontend Deployment (Vercel / Netlify)
-1. Connect repository to [Vercel](https://vercel.com) or [Netlify](https://netlify.com).
-2. Set Root Directory: `frontend`
-3. Set Build Command: `npm run build`
-4. Set Output Directory: `dist`
-5. Add Environment Variable: `VITE_API_URL=https://your-backend-render-url.onrender.com/api`
+1. **Database**: Create a free PostgreSQL DB on [Neon.tech](https://neon.tech) or [Render PostgreSQL](https://render.com).  
+   Copy the `DATABASE_URL` connection string.
 
----
+2. **Update Prisma schema** `backend/prisma/schema.prisma`:
+   ```prisma
+   datasource db {
+     provider = "postgresql"
+     url      = env("DATABASE_URL")
+   }
+   ```
 
-## 📄 Postman API Collection
+3. **Create Web Service** on Render → Connect GitHub repo → Set:
+   - **Root Directory**: `backend`
+   - **Build Command**: `npm install && npx prisma generate && npx prisma db push && npm run seed && npm run build`
+   - **Start Command**: `node dist/app.js`
+   - **Environment Variables**: `DATABASE_URL`, `JWT_SECRET`, `PORT=5000`, `NODE_ENV=production`
 
-The repository includes `Postman_Collection.json`.
+### Frontend — Vercel (Free Tier)
 
-### How to Import:
-1. Open Postman.
-2. Click **Import** -> Select `Postman_Collection.json`.
-3. Set variable `baseUrl` to `http://localhost:5000`.
-4. Execute `Login - Admin` or `Login - Sales` to automatically copy the returned JWT token into requests.
+1. Import GitHub repo on [Vercel](https://vercel.com/new)
+2. Set **Framework Preset**: Vite
+3. Set **Root Directory**: `frontend`
+4. Set **Environment Variable**: `VITE_API_URL=https://your-render-backend-url.onrender.com/api`
+5. Click **Deploy**
 
 ---
 
-## 📌 Architectural Assumptions & Known Limitations
-1. **Cross-Database Support**: Prisma schema utilizes string representation for role and status fields to allow zero-configuration local runs on SQLite while maintaining full compatibility with PostgreSQL for production cloud deployment.
-2. **Stock Snapshots**: Sales Challan item rows lock in product name, SKU, and unit price at the exact moment of order creation to preserve invoice integrity even if product catalog prices change later.
-3. **Cancellation Reversal**: Cancelling a confirmed challan restores product stock quantities and records a stock `IN` movement log for full auditability.
+## 📮 Postman API Collection
+
+The file `Postman_Collection.json` in the repo root contains all API endpoints.
+
+### Import Steps:
+1. Open Postman → Click **Import** → Select `Postman_Collection.json`
+2. Set the collection variable `baseUrl` = `http://localhost:5000` (or your live API URL)
+3. Run **"Login - Admin"** — the JWT token is auto-saved to the collection variable
+4. All subsequent requests will use the token automatically
+
+### API Endpoints Summary
+
+| Method | Endpoint | Description |
+|:-------|:---------|:------------|
+| `POST` | `/api/auth/login` | Login and get JWT token |
+| `GET` | `/api/auth/me` | Get current user profile |
+| `GET` | `/api/customers` | List all customers (with search) |
+| `POST` | `/api/customers` | Create new customer |
+| `GET` | `/api/customers/:id` | Get customer + follow-ups |
+| `PUT` | `/api/customers/:id` | Update customer |
+| `DELETE` | `/api/customers/:id` | Delete customer (ADMIN only) |
+| `POST` | `/api/customers/:id/followups` | Add follow-up note |
+| `GET` | `/api/products` | List all products |
+| `POST` | `/api/products` | Create product |
+| `PUT` | `/api/products/:id` | Update product |
+| `POST` | `/api/products/:id/stock` | Adjust stock (IN/OUT) |
+| `GET` | `/api/stock-movements` | Get stock movement audit log |
+| `GET` | `/api/challans` | List all challans |
+| `POST` | `/api/challans` | Create new challan (DRAFT) |
+| `PUT` | `/api/challans/:id/confirm` | Confirm challan (deducts stock) |
+| `PUT` | `/api/challans/:id/cancel` | Cancel challan (restores stock) |
+| `GET` | `/api/dashboard` | Revenue + stats summary |
+| `GET` | `/api/health` | Health check (JSON) |
+| `GET` | `/api/docs` | Interactive API documentation |
+
+---
+
+## ⚠️ Known Limitations & Incomplete Parts
+
+### Known Limitations
+
+1. **No Email Notifications** — The system does not send email alerts for low stock, follow-up reminders, or challan confirmations. A real production system would integrate SendGrid or Nodemailer.
+
+2. **No File/Image Uploads** — Products do not support image uploads. A production version would integrate AWS S3 or Cloudinary.
+
+3. **No Pagination on Large Lists** — Customer and product lists load all records. For large datasets (10,000+ records), server-side pagination with cursor-based pagination would be needed.
+
+4. **Single-Warehouse Model** — Stock tracking is single-location only. A multi-warehouse system would require a separate `Warehouse` model and per-location inventory tracking.
+
+5. **Basic Purchase Order** — Purchase Order (PO) / Inward GRN module is not implemented. Stock can be adjusted manually via the Stock Adjustment modal, but there is no formal PO creation and approval workflow.
+
+6. **No Real-Time Updates** — The dashboard and lists do not auto-refresh using WebSockets or Server-Sent Events. Users must manually refresh to see changes made by other users.
+
+7. **SQLite in Local Dev** — The local development uses SQLite which does not support all PostgreSQL features (e.g., concurrent writes under heavy load). This is mitigated by using Prisma ORM which abstracts both.
+
+8. **Free Tier Cold Starts** — The Render.com free tier backend may have ~30-60 second cold start times after periods of inactivity. The first API request after idle will be slow.
+
+### What Could Be Extended
+
+- Vendor / Supplier management module
+- Purchase Orders & GRN (Goods Receipt Notes) workflow
+- GST Tax Reports (GSTR-1 format)
+- WhatsApp / SMS follow-up reminders
+- Multi-currency support
+- Role management from Admin UI (add/edit user roles)
+- Audit log for all create/update/delete operations across all modules
+
+---
+
+## 📊 Core Business Modules
+
+| Module | Features |
+|:-------|:---------|
+| **🔐 Authentication** | JWT login, 4-role RBAC, protected routes, 1-click demo login |
+| **👥 CRM Customers** | Full profile CRUD, business type, GST, follow-up timeline notes |
+| **📦 Products** | SKU catalog, pricing, stock levels, low-stock alerts |
+| **📊 Stock Control** | Manual IN/OUT adjustments with reason, immutable audit log |
+| **📄 Sales Challans** | Multi-line order creation, draft/confirm/cancel, atomic stock deduction |
+| **🧾 Tax Invoices** | Client-side B2B PDF with tax breakdown, downloadable |
+| **📈 Dashboard** | Revenue totals, customer count, low stock alerts, recent activity |
+
+---
+
+*Built with ❤️ — Mini ERP + CRM Operations Portal — Full Stack Developer Case Study 2026*
