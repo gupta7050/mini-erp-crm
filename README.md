@@ -14,7 +14,7 @@
 |---|-------------|---------|
 | 1 | **GitHub Repository** | https://github.com/gupta7050/mini-erp-crm |
 | 2 | **Live Frontend URL** | https://mini-erp-crm.vercel.app |
-| 3 | **Live Backend API URL** | https://mini-erp-crm-api.onrender.com |
+| 3 | **Live Backend API URL** | https://mini-erp-crm-api.onrender.com (Live Mirror: https://38060735b3f467.lhr.life) |
 | 4 | **Test Login Credentials** | See table below |
 | 5 | **Postman Collection** | `Postman_Collection.json` in repository root |
 | 6 | **README & Setup Instructions** | This file |
@@ -39,9 +39,9 @@
 ## 🚀 Live Demo
 
 - **Frontend**: https://mini-erp-crm.vercel.app
-- **Backend API**: https://mini-erp-crm-api.onrender.com
-- **API Health Check**: https://mini-erp-crm-api.onrender.com/api/health
-- **API Documentation**: https://mini-erp-crm-api.onrender.com/api/docs
+- **Backend API**: https://mini-erp-crm-api.onrender.com (Direct Live URL: https://38060735b3f467.lhr.life)
+- **API Health Check**: https://38060735b3f467.lhr.life/api/health
+- **API Documentation**: https://38060735b3f467.lhr.life/api/docs
 
 ---
 
