@@ -4,8 +4,8 @@
   "description": "Mini ERP + CRM Operations Portal Backend API",
   "main": "dist/app.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/app.js",
+    "build": "prisma generate && tsc",
+    "start": "prisma db push && node dist/app.js",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",

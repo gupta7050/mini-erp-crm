@@ -8,11 +8,22 @@ import customerRoutes from './routes/customer.routes';
 import productRoutes from './routes/product.routes';
 import challanRoutes from './routes/challan.routes';
 import dashboardRoutes from './routes/dashboard.routes';
+import { prisma } from './prisma/client';
+import { seedDatabase } from './prisma/seed';
 
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (Postman, mobile apps, same-origin proxy)
+    // and any origin in development
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Healthcheck & Docs Routes
@@ -99,9 +110,20 @@ app.use(errorHandler);
 
 // Start Server if not imported by test runner
 if (require.main === module) {
-  app.listen(config.port, () => {
+  app.listen(config.port, async () => {
     console.log(`🚀 Mini ERP Backend running on http://localhost:${config.port}`);
     console.log(`📡 Healthcheck API: http://localhost:${config.port}/api/health`);
+
+    try {
+      const userCount = await prisma.user.count();
+      if (userCount === 0) {
+        console.log('⚡ Empty database detected. Auto-seeding initial demo data...');
+        await seedDatabase();
+        console.log('✅ Auto-seed completed successfully!');
+      }
+    } catch (err: any) {
+      console.warn('⚠️ Auto-seed notice:', err?.message || err);
+    }
   });
 }
 
